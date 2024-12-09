@@ -1,0 +1,68 @@
+CREATE TABLE Aluno (
+    AlunoID INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL,
+    Matricula VARCHAR(20) NOT NULL UNIQUE,
+    DataNascimento DATE,
+    Endereco VARCHAR(200),
+    Telefone VARCHAR(20),
+    Email VARCHAR(100)
+);
+
+CREATE TABLE Professor (
+    ProfessorID INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL,
+    Especializacao VARCHAR(100),
+    Matricula VARCHAR(20) NOT NULL UNIQUE
+);
+
+CREATE TABLE Curso (
+    CursoID INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL UNIQUE,
+    Descricao TEXT,
+    Duracao INT,
+    Grau VARCHAR(50)
+);
+
+CREATE TABLE Materia (
+    MateriaID INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL,
+    Codigo VARCHAR(20) NOT NULL UNIQUE,
+    CargaHoraria INT,
+    PreRequisitos TEXT
+);
+
+CREATE TABLE Turma (
+    TurmaID INT AUTO_INCREMENT PRIMARY KEY,
+    AnoLetivo YEAR NOT NULL,
+    Semestre ENUM('1', '2') NOT NULL,
+    Horario VARCHAR(100),
+    ProfessorID INT,
+    MateriaID INT,
+    FOREIGN KEY (ProfessorID) REFERENCES Professor(ProfessorID)
+        ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (MateriaID) REFERENCES Materia(MateriaID)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Nota (
+    NotaID INT AUTO_INCREMENT PRIMARY KEY,
+    Nota DECIMAL(5, 2) NOT NULL,
+    TipoAvaliacao VARCHAR(50),
+    AlunoID INT,
+    MateriaID INT,
+    FOREIGN KEY (AlunoID) REFERENCES Aluno(AlunoID)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (MateriaID) REFERENCES Materia(MateriaID)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Matricula (
+    MatriculaID INT AUTO_INCREMENT PRIMARY KEY,
+    AlunoID INT,
+    TurmaID INT,
+    DataMatricula DATE NOT NULL,
+    FOREIGN KEY (AlunoID) REFERENCES Aluno(AlunoID)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (TurmaID) REFERENCES Turma(TurmaID)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
